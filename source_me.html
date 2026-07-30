@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Source:Me - Misinformation Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+            100% { transform: translateY(0px) scale(1); }
+        }
+        .animate-float {
+            animation: float 8s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+            animation: float 10s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+        
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transform: translateY(10px);
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+
+        /* Custom Dark Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-slate-950 min-h-screen font-sans text-slate-300 relative overflow-x-hidden selection:bg-orange-500/30 selection:text-orange-200">
+
+    <!-- Ambient Background Gradients -->
+    <div class="fixed top-[-20%] left-[-10%] w-[70vw] h-[70vw] rounded-full bg-orange-900/20 blur-[120px] animate-float pointer-events-none -z-10"></div>
+    <div class="fixed bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-amber-900/20 blur-[120px] animate-float-delayed pointer-events-none -z-10"></div>
+    <div class="fixed top-[40%] left-[60%] w-[40vw] h-[40vw] rounded-full bg-red-900/10 blur-[100px] animate-float pointer-events-none -z-10"></div>
+
+    <nav class="bg-slate-950/60 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <div class="bg-gradient-to-br from-amber-400 to-orange-600 p-2 rounded-xl shadow-lg shadow-orange-500/20">
+                        <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <span class="ml-3 font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tight">Source:Me</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden sm:flex sm:items-center sm:space-x-8">
+                    <button onclick="switchTab('learn')" id="nav-learn" class="nav-btn text-orange-400 border-b-2 border-orange-400 px-3 py-6 text-sm font-semibold transition-all">
+                        Learn Tips
+                    </button>
+                    <button onclick="switchTab('quiz')" id="nav-quiz" class="nav-btn text-slate-400 hover:text-slate-200 hover:border-slate-600 border-b-2 border-transparent px-3 py-6 text-sm font-semibold transition-all">
+                        Take Quiz
+                    </button>
+                    <button onclick="switchTab('resources')" id="nav-resources" class="nav-btn text-slate-400 hover:text-slate-200 hover:border-slate-600 border-b-2 border-transparent px-3 py-6 text-sm font-semibold transition-all">
+                        Resources
+                    </button>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex items-center sm:hidden">
+                    <button onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 focus:outline-none transition-colors border border-transparent hover:border-white/10">
+                        <i data-lucide="menu" id="mobile-menu-icon" class="block h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden sm:hidden bg-slate-900/95 backdrop-blur-2xl border-t border-white/5 absolute w-full shadow-2xl">
+            <div class="pt-2 pb-4 space-y-1 px-2">
+                <button onclick="switchTab('learn'); toggleMobileMenu()" id="mob-nav-learn" class="mob-nav-btn bg-slate-800/50 border-orange-500 text-orange-400 block pl-4 pr-4 py-3 border-l-4 text-base font-semibold w-full text-left rounded-r-lg">
+                    Learn Tips
+                </button>
+                <button onclick="switchTab('quiz'); toggleMobileMenu()" id="mob-nav-quiz" class="mob-nav-btn border-transparent text-slate-400 hover:bg-slate-800/30 hover:border-slate-600 hover:text-slate-200 block pl-4 pr-4 py-3 border-l-4 text-base font-semibold w-full text-left rounded-r-lg transition-all">
+                    Take Quiz
+                </button>
+                <button onclick="switchTab('resources'); toggleMobileMenu()" id="mob-nav-resources" class="mob-nav-btn border-transparent text-slate-400 hover:bg-slate-800/30 hover:border-slate-600 hover:text-slate-200 block pl-4 pr-4 py-3 border-l-4 text-base font-semibold w-full text-left rounded-r-lg transition-all">
+                    Resources
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative z-10">
+        
+        <!-- TAB CONTENT: LEARN -->
+        <div id="tab-learn" class="tab-content active">
+            <!-- HEADER SECTION -->
+            <div class="text-center mb-20 relative">
+                
+                <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight leading-tight">
+                    Navigate the Web with <br class="hidden sm:block" />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-white drop-shadow-sm">Absolute Confidence</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed mb-10 font-light">
+                    In an era of information overload, hyper-realistic deepfakes, and algorithmic echo chambers, critical thinking is your best defense. Learn how to identify fake news, spot manipulated media, and protect your digital well-being.
+                </p>
+                
+                <!-- Quick Feature Highlights -->
+                <div class="flex flex-wrap justify-center gap-4 text-sm font-medium">
+                    <div class="flex items-center text-slate-300 bg-slate-900/50 backdrop-blur-md px-5 py-2.5 rounded-xl border border-white/5 shadow-lg">
+                        <i data-lucide="brain" class="w-5 h-5 mr-2 text-orange-400"></i> Sharpen Thinking
+                    </div>
+                    <div class="flex items-center text-slate-300 bg-slate-900/50 backdrop-blur-md px-5 py-2.5 rounded-xl border border-white/5 shadow-lg">
+                        <i data-lucide="scan-line" class="w-5 h-5 mr-2 text-amber-400"></i> Spot Manipulations
+                    </div>
+                    <div class="flex items-center text-slate-300 bg-slate-900/50 backdrop-blur-md px-5 py-2.5 rounded-xl border border-white/5 shadow-lg">
+                        <i data-lucide="shield" class="w-5 h-5 mr-2 text-white"></i> Build Resilience
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tips-container">
+                <!-- Tips will be injected here by JavaScript -->
+            </div>
+            
+            <div class="mt-16 bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-orange-500/20 shadow-2xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 -mt-8 -mr-8 text-orange-500/10 group-hover:text-orange-500/20 transition-colors duration-700 pointer-events-none transform rotate-12">
+                    <i data-lucide="shield-alert" style="width: 250px; height: 250px;"></i>
+                </div>
+                <div class="relative z-10">
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/30 text-orange-300 text-xs font-bold uppercase tracking-wider mb-4">
+                        The Big Picture
+                    </div>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Why this matters</h3>
+                    <p class="text-slate-300 leading-relaxed max-w-3xl text-lg font-light">
+                        Misinformation isn't just about harmless rumors; it can manipulate elections, endanger public health, and sow division. By actively practicing digital literacy, you become a <span class="text-orange-400 font-medium">firewall</span> against the spread of false information, protecting yourself, your family, and your community from manipulation.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: QUIZ -->
+        <div id="tab-quiz" class="tab-content">
+            <!-- QUIZ HEADER -->
+            <div class="text-center mb-16 relative">
+                
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    Are You Immune to <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Digital Deception?</span>
+                </h1>
+                
+                <p class="text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
+                    Put your critical thinking to the test. Spot the fakes, identify the logical fallacies, and see if you can survive the wild west of the internet.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-slate-900/60 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 overflow-hidden relative">
+                    
+                    <!-- Decorative glowing line at top -->
+                    <div class="h-1 w-full bg-gradient-to-r from-amber-500 via-orange-500 to-red-600"></div>
+
+                    <!-- Quiz In Progress State -->
+                    <div id="quiz-active" class="p-8 sm:p-12">
+                        <div class="flex justify-between items-center mb-10">
+                            <span class="text-sm font-semibold text-slate-400 uppercase tracking-widest flex items-center">
+                                <i data-lucide="layout-list" class="w-4 h-4 mr-2"></i>
+                                Question <span id="current-question-num" class="text-white ml-1 mr-1">1</span> of <span id="total-questions" class="text-white ml-1"></span>
+                            </span>
+                            <span class="bg-orange-950/50 border border-orange-800 text-orange-400 text-xs font-bold px-4 py-1.5 rounded-full shadow-inner">
+                                Score: <span id="current-score" class="text-white ml-1">0</span>
+                            </span>
+                        </div>
+                        
+                        <h2 id="question-text" class="text-2xl sm:text-3xl font-bold text-white mb-8 leading-snug">
+                            <!-- Question text injected here -->
+                        </h2>
+                        
+                        <div id="options-container" class="space-y-4 mb-10">
+                            <!-- Options injected here -->
+                        </div>
+
+                        <!-- Feedback area (hidden by default) -->
+                        <div id="feedback-container" class="hidden mb-10 p-5 rounded-2xl border backdrop-blur-md transition-all duration-300 transform scale-95 opacity-0">
+                            <div class="flex items-start">
+                                <div id="feedback-icon" class="flex-shrink-0 mt-0.5"></div>
+                                <div class="ml-4">
+                                    <h3 id="feedback-title" class="text-base font-bold tracking-wide"></h3>
+                                    <p id="feedback-text" class="mt-2 text-sm leading-relaxed"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end border-t border-white/5 pt-8">
+                            <button id="next-btn" onclick="nextQuestion()" disabled class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed flex items-center shadow-lg shadow-orange-900/50 hover:shadow-orange-500/25">
+                                Next Question
+                                <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Results State -->
+                    <div id="quiz-results" class="hidden p-10 sm:p-16 text-center relative overflow-hidden">
+                        <!-- Confetti/Glow background effect -->
+                        <div class="absolute inset-0 bg-gradient-to-b from-orange-900/20 to-transparent pointer-events-none"></div>
+
+                        <div id="result-icon-container" class="mx-auto w-24 h-24 bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 rounded-full flex items-center justify-center mb-8 shadow-2xl relative z-10">
+                            <!-- Icon injected based on score -->
+                        </div>
+                        <h2 class="text-4xl font-extrabold text-white mb-3 relative z-10">Quiz Complete!</h2>
+                        <p class="text-xl text-slate-400 mb-10 relative z-10">
+                            You scored <span id="final-score" class="font-bold text-orange-400 text-2xl mx-1"></span> out of <span id="final-total" class="font-bold text-white text-2xl ml-1"></span>.
+                        </p>
+                        
+                        <div id="result-message" class="bg-slate-800/50 backdrop-blur-md rounded-2xl p-8 mb-10 text-left border border-white/10 shadow-xl relative z-10">
+                            <!-- Message injected based on score -->
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-10">
+                            <button onclick="restartQuiz()" class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold py-3 px-8 rounded-xl transition-all shadow-lg shadow-orange-900/50">
+                                Try Again
+                            </button>
+                            <button onclick="switchTab('learn')" class="bg-slate-800 border border-slate-600 hover:bg-slate-700 hover:border-slate-500 text-white font-semibold py-3 px-8 rounded-xl transition-all">
+                                Review Tips
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: RESOURCES -->
+        <div id="tab-resources" class="tab-content">
+            <!-- RESOURCES HEADER -->
+            <div class="text-center mb-16 relative">
+                
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight leading-tight">
+                    Trust, But <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Actively Verify.</span>
+                </h1>
+                
+                <p class="text-base md:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
+                    Don't just take their word for it. Use these professional tools, databases, and plugins to tear down false claims and find the actual truth.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- General Fact-Checking -->
+                <div class="bg-slate-900/60 backdrop-blur-xl shadow-2xl rounded-3xl border border-white/10 overflow-hidden">
+                    <div class="p-8 border-b border-white/5 bg-slate-950/30">
+                        <h2 class="text-2xl font-bold text-white flex items-center">
+                            <div class="p-2 bg-orange-500/20 rounded-lg mr-4 border border-orange-500/30">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-orange-400"></i>
+                            </div>
+                            General Fact-Checking
+                        </h2>
+                        <p class="text-slate-400 mt-2 ml-14">Essential organizations and tools dedicated to verifying claims and debunking rumors.</p>
+                    </div>
+                    <ul class="divide-y divide-white/5">
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.snopes.com/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            Snopes
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">One of the oldest and most trusted fact-checking sites on the internet, specializing in urban legends, rumors, and viral misinformation.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.politifact.com/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            PolitiFact
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">Focuses on looking at specific statements made by politicians and rating them for accuracy using their famous "Truth-O-Meter".</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.factcheck.org/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            FactCheck.org
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">A nonpartisan, nonprofit project of the Annenberg Public Policy Center that aims to reduce the level of deception and confusion in U.S. politics.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.reuters.com/fact-check/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            Reuters Fact Check
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">Operated by Reuters, an international media agency, providing robust fact-checking of global news and social media claims.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Archival & Investigation -->
+                <div class="bg-slate-900/60 backdrop-blur-xl shadow-2xl rounded-3xl border border-white/10 overflow-hidden">
+                    <div class="p-8 border-b border-white/5 bg-slate-950/30">
+                        <h2 class="text-2xl font-bold text-white flex items-center">
+                            <div class="p-2 bg-indigo-500/20 rounded-lg mr-4 border border-indigo-500/30">
+                                <i data-lucide="archive" class="w-6 h-6 text-indigo-400"></i>
+                            </div>
+                            Archival & Investigation
+                        </h2>
+                        <p class="text-slate-400 mt-2 ml-14">Tools to uncover deleted posts, track website changes, and access historical records.</p>
+                    </div>
+                    <ul class="divide-y divide-white/5">
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://archive.org/web/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            The Wayback Machine (Archive.org)
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">Explore billions of saved web pages over time. This is a crucial tool for finding deleted tweets, stealth-edited articles, or controversial websites that have been taken down.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://archive.today/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            Archive.today
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">A time capsule for the internet. It takes a permanent 'snapshot' of a webpage that will remain online even if the original page disappears, is stealth-edited, or places content behind a paywall.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://thecorrodingweb.org/" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            The Corroding Web
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">Documenting and providing resources to protect you from online exploitation and bad actors</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Education & Digital Literacy -->
+                <div class="bg-slate-900/60 backdrop-blur-xl shadow-2xl rounded-3xl border border-white/10 overflow-hidden">
+                    <div class="p-8 border-b border-white/5 bg-slate-950/30">
+                        <h2 class="text-2xl font-bold text-white flex items-center">
+                            <div class="p-2 bg-amber-500/20 rounded-lg mr-4 border border-amber-500/30">
+                                <i data-lucide="book-open" class="w-6 h-6 text-amber-400"></i>
+                            </div>
+                            Education & Digital Literacy
+                        </h2>
+                        <p class="text-slate-400 mt-2 ml-14">Resources to build critical thinking skills for students, parents, and the general public.</p>
+                    </div>
+                    <ul class="divide-y divide-white/5">
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://mediasmarts.ca/break-fake" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            MediaSmarts: Break the Fake
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">Canadian educational materials, tip sheets, and videos designed to teach critical thinking and how to spot suspicious posts.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.zipsec.com/learn/avoiding-phishing-scams-and-clickbait" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            Zip Security: Avoiding Phishing & Clickbait
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">A practical guide covering the basics and details of phishing, how to identify scams, and ways to recognize suspicious links and clickbait.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.youtube.com/hitpause" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            YouTube: Hit Pause
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">A series of short, highly digestible videos designed by YouTube to teach media literacy, highlighting how to spot manipulation tactics and check sources before sharing.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="group transition-colors hover:bg-slate-800/50">
+                            <a href="https://www.unicef.org/eca/stories/quick-guide-spotting-misinformation" target="_blank" rel="noopener noreferrer" class="block p-8">
+                                <div class="flex items-center justify-between">
+                                    <div class="pr-8">
+                                        <h3 class="text-xl font-bold text-white group-hover:text-orange-400 transition-colors flex items-center">
+                                            UNICEF: Spotting Misinformation
+                                        </h3>
+                                        <p class="text-base text-slate-400 mt-2 font-light">A practical, easy-to-read guide from UNICEF on how to quickly spot fake news, understand why people share it (like herd mentality), and how to talk to others about misinformation.</p>
+                                    </div>
+                                    <div class="bg-slate-800 group-hover:bg-orange-900/50 p-3 rounded-full transition-colors border border-transparent group-hover:border-orange-500/30">
+                                        <i data-lucide="external-link" class="w-5 h-5 text-slate-500 group-hover:text-orange-400"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- Data Definitions ---
+        const tipsData = [
+            {
+                id: 1,
+                title: "Verify the Source",
+                icon: "search",
+                iconColor: "text-orange-400",
+                bgColor: "bg-orange-900/30",
+                borderColor: "border-orange-500/30",
+                content: "Check if the information comes from a reputable and known organization. Look for credible news outlets, government websites, or established academic institutions. Be wary of unfamiliar websites or social media accounts that suddenly appear.",
+                videoId: "1aQOonl_r2s" // News Literacy Project: How to know what to trust
+            },
+            {
+                id: 2,
+                title: "Read Beyond the Headline",
+                icon: "book-open",
+                iconColor: "text-amber-400",
+                bgColor: "bg-amber-900/30",
+                borderColor: "border-amber-500/30",
+                content: "Headlines are often designed to grab attention (clickbait) and may not accurately reflect the content of the article. Read the full story to understand the context and see if the evidence supports the headline's claims.",
+                videoId: "q-Y-z6HmRgI" // TED-Ed: How to choose your news
+            },
+            {
+                id: 3,
+                title: "Check the Date",
+                icon: "clock",
+                iconColor: "text-white",
+                bgColor: "bg-slate-800/50",
+                borderColor: "border-slate-500/30",
+                content: "Old news is frequently repurposed and shared out of context to manipulate emotions or mislead. Always check the publication date of the article or the date a photo or video was originally posted.",
+                videoId: "GhwjG-ZosO8" // BBC: How to spot fake news
+            },
+            {
+                id: 4,
+                title: "Analyze Visuals",
+                icon: "scan-line",
+                iconColor: "text-yellow-400",
+                bgColor: "bg-yellow-900/30",
+                borderColor: "border-yellow-500/30",
+                content: "Images and videos can be easily altered, cropped, or generated using AI (deepfakes). Look for unnatural shadows, blurry edges, mismatched lighting, or weird inconsistencies.",
+                videoId: "cQ54GDm1eL0" // MIT: In the Age of AI, How Do You Spot a Deepfake?
+            },
+            {
+                id: 5,
+                title: "Beware of Emotion",
+                icon: "flame",
+                iconColor: "text-rose-400",
+                bgColor: "bg-rose-900/30",
+                borderColor: "border-rose-500/30",
+                content: "Misinformation often tries to provoke strong emotions like anger, fear, or extreme joy to bypass your critical thinking. If a post makes you feel intensely emotional, pause and verify it before sharing.",
+                videoId: "cSKGa_7XJcg" // FactCheck.org: How to Spot Fake News
+            },
+            {
+                id: 6,
+                title: "Check Credentials",
+                icon: "user-check",
+                iconColor: "text-red-400",
+                bgColor: "bg-red-900/30",
+                borderColor: "border-red-500/30",
+                content: "Who wrote the piece? Do they have expertise in the subject matter? A quick search of the author's name can often reveal their background, biases, or if they are a real person at all.",
+                videoId: "W5rG8-WlFcw" // GCFLearnFree: Evaluating Sources
+            }
+        ];
+
+        const questionBank = [
+            {
+                question: "You see a shocking headline on social media, but the article is from a website you've never heard of. What is the best first step?",
+                options: [
+                    "Share it immediately to warn others.",
+                    "Read the article and see if it looks legitimate.",
+                    "Check known, reliable news sources to see if they report the same story.",
+                    "Comment on the post asking if it's true."
+                ],
+                correctAnswer: 2,
+                explanation: "Cross-referencing with established news outlets is the most reliable way to verify breaking or shocking news. If it's real and major, reputable outlets will cover it."
+            },
+            {
+                question: "Which of the following is a strong indicator that an image might be a 'deepfake' or AI-generated?",
+                options: [
+                    "It is in black and white.",
+                    "Inconsistencies like weird fingers, mismatched lighting, or blurry edges.",
+                    "The person in the image is famous.",
+                    "The image has a watermark from a stock photo site."
+                ],
+                correctAnswer: 1,
+                explanation: "AI generators often struggle with fine details (like hands/fingers), text, and ensuring consistent lighting and shadows across the entire image."
+            },
+            {
+                question: "Why do creators of fake news often use sensational or emotionally charged headlines?",
+                options: [
+                    "Because truth is always stranger than fiction.",
+                    "To bypass logical thinking and encourage rapid sharing based on emotion.",
+                    "To improve their grammar and vocabulary skills.",
+                    "Because social media platforms require emotional headlines."
+                ],
+                correctAnswer: 1,
+                explanation: "Emotional manipulation (making you angry, fearful, or overly excited) is a primary tactic to make you share content before you take the time to verify it."
+            },
+            {
+                question: "What does 'Confirmation Bias' mean in the context of online information?",
+                options: [
+                    "A software feature that confirms when an email is sent.",
+                    "The tendency to believe information that supports what we already think.",
+                    "A type of online scam targeting bank accounts.",
+                    "The process of officially fact-checking an article."
+                ],
+                correctAnswer: 1,
+                explanation: "Confirmation bias makes us vulnerable to misinformation because we naturally want to believe things that align with our existing beliefs, making us less critical of that specific information."
+            },
+            {
+                question: "Which of these URLs is most likely a 'typosquatting' fake site designed to trick you?",
+                options: [
+                    "abcnews.go.com",
+                    "bbc.com/news",
+                    "abcnews-com.co",
+                    "reuters.com"
+                ],
+                correctAnswer: 2,
+                explanation: "Fake sites often use domains that look slightly off (like adding '-com.co') to trick people who glance quickly at the URL."
+            },
+            {
+                question: "What is 'Astroturfing'?",
+                options: [
+                    "A technique for masking deepfake videos.",
+                    "Hacking a social media account.",
+                    "Paying for targeted advertisements.",
+                    "Faking grassroots support to make an idea or product look wildly popular."
+                ],
+                correctAnswer: 3,
+                explanation: "Astroturfing uses bots, fake accounts, and paid actors to create the illusion of widespread organic public support for a specific agenda."
+            },
+            {
+                question: "You see a viral screenshot of a highly controversial celebrity tweet. How can you best verify it?",
+                options: [
+                    "Check the comments to see if people believe it.",
+                    "Assume it's true if the celebrity is controversial.",
+                    "Check their actual timeline or use the Internet Archive (Wayback Machine).",
+                    "Repost it and ask your followers."
+                ],
+                correctAnswer: 2,
+                explanation: "Screenshots of tweets are incredibly easy to fake. Always check the actual source profile, or an internet archive if it was supposedly deleted."
+            },
+            {
+                question: "What is 'Clickbait'?",
+                options: [
+                    "Articles that are entirely factual and well-researched.",
+                    "Sensationalized, misleading headlines designed specifically to get you to click.",
+                    "A type of computer virus.",
+                    "A reliable news source aggregator."
+                ],
+                correctAnswer: 1,
+                explanation: "Clickbait prioritizes ad revenue over truth, using curiosity gaps and extreme language to drive traffic, even if the article itself doesn't deliver."
+            },
+            {
+                question: "Which tool is best used to find where an image first appeared online?",
+                options: [
+                    "A dictionary.",
+                    "A reverse image search engine like TinEye or Google Images.",
+                    "A spelling and grammar checker.",
+                    "A social media analytics tool."
+                ],
+                correctAnswer: 1,
+                explanation: "Reverse image searching allows you to see the original date, context, and source of a photo, which is crucial for spotting recycled or out-of-context images."
+            },
+            {
+                question: "A news story claims 'Many people are saying...' without citing specific individuals. What is this?",
+                options: [
+                    "A peer-reviewed scientific fact.",
+                    "A direct quote from an expert.",
+                    "'Weasel words' used to make an unverified claim sound like a consensus.",
+                    "An ironclad guarantee of truth."
+                ],
+                correctAnswer: 2,
+                explanation: "Vague phrasing like 'many people say' or 'experts agree' without actual names or citations is a massive red flag for unsubstantiated claims."
+            },
+            {
+                question: "What is 'Satire' in the context of news?",
+                options: [
+                    "The use of humor, irony, or exaggeration to critique something, often mistaken for real news.",
+                    "A deliberate lie meant to cause harm or steal data.",
+                    "A state-sponsored propaganda campaign.",
+                    "A completely objective reporting of facts."
+                ],
+                correctAnswer: 0,
+                explanation: "Sites like The Onion or The Babylon Bee are satire. While not meant to deceive, their articles are frequently shared out of context by people who think they are real."
+            },
+            {
+                question: "How can you often spot an automated 'bot' account on social media?",
+                options: [
+                    "They have a verified checkmark.",
+                    "They post extremely slowly and carefully.",
+                    "They have no profile picture, a username with random numbers, and post constantly.",
+                    "They only post pictures of cats."
+                ],
+                correctAnswer: 2,
+                explanation: "While bots are getting smarter, many still use generic or stolen profile pictures, string-of-number usernames, and post at superhuman speeds."
+            },
+            {
+                question: "What does the lock icon (HTTPS) next to a website's URL guarantee?",
+                options: [
+                    "The website is 100% truthful and reliable.",
+                    "The website cannot give you a virus.",
+                    "Your connection is encrypted, but the site could still host fake news or scams.",
+                    "The website is run by a government agency."
+                ],
+                correctAnswer: 2,
+                explanation: "HTTPS simply means your data is secure in transit. Scammers and fake news sites can (and easily do) get HTTPS certificates for their websites."
+            },
+            {
+                question: "What is a 'Filter Bubble'?",
+                options: [
+                    "A physical privacy screen for your monitor.",
+                    "An algorithm-driven environment where you are only exposed to information that aligns with your existing beliefs.",
+                    "A type of secure messaging app.",
+                    "A way to permanently delete your search history."
+                ],
+                correctAnswer: 1,
+                explanation: "Algorithms feed you what you already like. Over time, this traps you in a 'bubble' where you rarely see opposing viewpoints, warping your perception of reality."
+            },
+            {
+                question: "You receive a forwarded message on a chat app offering free airline tickets if you click a link. What should you do?",
+                options: [
+                    "Click the link, it might be real!",
+                    "Forward it to 10 more people to secure your tickets.",
+                    "Ignore it and do not click; it is highly likely a phishing scam.",
+                    "Reply to the sender asking for their credit card info."
+                ],
+                correctAnswer: 2,
+                explanation: "Unsolicited links offering free things, especially forwarded ones, are almost always phishing attempts designed to steal your personal data."
+            },
+            {
+                question: "Why is checking the original publication date of an article critical?",
+                options: [
+                    "Because older articles are always more accurate.",
+                    "Because bad actors often take true stories from years ago and present them as happening right now to spark fresh outrage.",
+                    "Because articles expire from the internet after 30 days.",
+                    "Because the date dictates the font size on the page."
+                ],
+                correctAnswer: 1,
+                explanation: "Recycling old news (like a 4-year-old protest video) during a current event is a very common tactic to manipulate public emotion."
+            },
+            {
+                question: "What role do algorithms typically play on social media platforms?",
+                options: [
+                    "They prioritize absolute truth and accuracy above all else.",
+                    "They manually review every single post.",
+                    "They prioritize engagement, often pushing sensational or divisive content because it keeps users online longer.",
+                    "They try to limit the amount of time you spend on the app."
+                ],
+                correctAnswer: 2,
+                explanation: "Algorithms are designed to maximize your time on the site. Since outrage and shock drive the most engagement, misinformation is naturally amplified."
+            },
+            {
+                question: "What is 'Native Advertising' or 'Sponsored Content'?",
+                options: [
+                    "Pop-up ads that are easy to spot and close.",
+                    "Advertisements designed to look and read exactly like regular news articles or editorial content.",
+                    "Free products given to journalists.",
+                    "News articles about local businesses."
+                ],
+                correctAnswer: 1,
+                explanation: "Native ads blend into the surrounding content. Always look for small disclaimers like 'Sponsored', 'Ad', or 'Promoted' to know if a brand paid for the article."
+            },
+            {
+                question: "What does the acronym 'CRAAP' stand for when evaluating sources?",
+                options: [
+                    "Credibility, Reading, Analysis, Action, Posting.",
+                    "Clickbait, Rumors, Anger, Anxiety, Panic.",
+                    "Content, Research, Articles, Authors, Publication.",
+                    "Currency, Relevance, Authority, Accuracy, Purpose."
+                ],
+                correctAnswer: 3,
+                explanation: "The CRAAP test is a widely used standard in media literacy to determine if a source is trustworthy and appropriate for research."
+            },
+            {
+                question: "If an article makes a massive, world-changing claim but is only reported by one obscure blog, what is the most likely truth?",
+                options: [
+                    "The blog has the exclusive scoop and everyone else is hiding it.",
+                    "It is false or distorted; major global news outlets would rapidly cover a truly world-changing event.",
+                    "The government shut down the mainstream media.",
+                    "You should immediately share it as fact."
+                ],
+                correctAnswer: 1,
+                explanation: "While exclusive scoops exist, truly massive global events cannot be hidden. A total lack of coverage from major outlets is a strong indicator of a hoax."
+            }
+        ];
+
+        // --- State Variables ---
+        let currentTab = 'learn';
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+        let activeQuizQuestions = [];
+        const QUIZ_LENGTH = 6; // Set quiz to exactly 6 questions
+
+        // DOM Elements
+        const mobileMenu = document.getElementById('mobile-menu');
+        const tipsContainer = document.getElementById('tips-container');
+        
+        // Quiz DOM Elements
+        const quizActiveDiv = document.getElementById('quiz-active');
+        const quizResultsDiv = document.getElementById('quiz-results');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const currentQNum = document.getElementById('current-question-num');
+        const totalQNum = document.getElementById('total-questions');
+        const currentScoreEl = document.getElementById('current-score');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const nextBtn = document.getElementById('next-btn');
+
+        // --- Initialization ---
+        function init() {
+            renderTips();
+            generateQuiz(); // Generate random questions on load
+            loadQuestion(); // Add this line to actually display the first question!
+            lucide.createIcons();
+        }
+
+        function generateQuiz() {
+            // Shuffle the question bank array
+            const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            // Slice the first QUIZ_LENGTH (6) questions to use for this round
+            activeQuizQuestions = shuffled.slice(0, QUIZ_LENGTH);
+            totalQNum.textContent = activeQuizQuestions.length;
+        }
+
+        // --- Navigation Logic ---
+        function switchTab(tabId) {
+            currentTab = tabId;
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Show target tab with a small delay for smooth reflow
+            setTimeout(() => {
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+            }, 50);
+
+            // Update Desktop Nav Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn text-slate-400 hover:text-slate-200 hover:border-slate-600 border-b-2 border-transparent px-3 py-6 text-sm font-semibold transition-all";
+            });
+            const activeDesktopBtn = document.getElementById(`nav-${tabId}`);
+            activeDesktopBtn.className = "nav-btn text-orange-400 border-b-2 border-orange-400 px-3 py-6 text-sm font-semibold transition-all shadow-[0_4px_15px_-3px_rgba(249,115,22,0.3)]";
+
+            // Update Mobile Nav Styling
+            document.querySelectorAll('.mob-nav-btn').forEach(btn => {
+                btn.className = "mob-nav-btn border-transparent text-slate-400 hover:bg-slate-800/30 hover:border-slate-600 hover:text-slate-200 block pl-4 pr-4 py-3 border-l-4 text-base font-semibold w-full text-left rounded-r-lg transition-all";
+            });
+            const activeMobBtn = document.getElementById(`mob-nav-${tabId}`);
+            activeMobBtn.className = "mob-nav-btn bg-slate-800/50 border-orange-500 text-orange-400 block pl-4 pr-4 py-3 border-l-4 text-base font-semibold w-full text-left rounded-r-lg shadow-inner";
+        }
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.setAttribute('data-lucide', 'menu');
+            } else {
+                icon.setAttribute('data-lucide', 'x');
+            }
+            lucide.createIcons();
+        }
+
+        // --- Learn Tab Logic ---
+        function renderTips() {
+            tipsContainer.innerHTML = '';
+            tipsData.forEach(tip => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900/60 backdrop-blur-md rounded-2xl p-8 border border-white/5 shadow-xl hover:border-orange-500/30 hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full";
+                
+                card.innerHTML = `
+                    <div class="flex items-center mb-6">
+                        <div class="p-3 ${tip.bgColor} border ${tip.borderColor} rounded-xl mr-5 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="${tip.icon}" class="w-7 h-7 ${tip.iconColor}"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">${tip.title}</h3>
+                    </div>
+                    <p class="text-slate-400 leading-relaxed font-light flex-grow mb-6">${tip.content}</p>
+                    
+                    <div class="mt-auto relative w-full aspect-video rounded-xl overflow-hidden border border-white/10 shadow-lg group-hover:border-orange-500/50 transition-all duration-300 bg-slate-950 block flex-shrink-0">
+                        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/${tip.videoId}?rel=0&modestbranding=1&playsinline=1" title="YouTube video player" frameborder="0" loading="lazy" allow="clipboard-write; encrypted-media; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="absolute inset-0 w-full h-full z-10"></iframe>
+                    </div>
+                `;
+                tipsContainer.appendChild(card);
+            });
+            // Re-initialize icons for the newly added elements
+            lucide.createIcons();
+        }
+
+        function loadVideo(container, videoId) {
+            // Replace the thumbnail and play button with the actual iframe
+            container.innerHTML = `
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&playsinline=1" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    loading="lazy"
+                    allow="clipboard-write; encrypted-media; picture-in-picture; web-share" 
+                    allowfullscreen
+                    class="absolute inset-0 w-full h-full object-cover z-10">
+                </iframe>
+                <div class="absolute bottom-2 right-2 z-20">
+                   <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener noreferrer" class="text-xs bg-black/80 text-white px-3 py-1.5 rounded-md hover:bg-orange-600 transition-colors shadow-lg border border-white/10" onclick="event.stopPropagation();">Open in YouTube <i data-lucide="external-link" class="w-3 h-3 inline ml-1"></i></a>
+                </div>
+            `;
+            // Remove the cursor-pointer and onclick so clicking the iframe doesn't reload it
+            container.classList.remove('cursor-pointer');
+            container.onclick = null;
+            lucide.createIcons();
+        }
+
+        // --- Quiz Logic ---
+        function loadQuestion() {
+            answered = false;
+            const q = activeQuizQuestions[currentQuestionIndex];
+            
+            currentQNum.textContent = currentQuestionIndex + 1;
+            currentScoreEl.textContent = score;
+            questionText.textContent = q.question;
+            
+            // Hide feedback & disable next
+            feedbackContainer.classList.add('hidden', 'scale-95', 'opacity-0');
+            feedbackContainer.classList.remove('scale-100', 'opacity-100');
+            nextBtn.disabled = true;
+
+            // Render options
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "quiz-option w-full text-left p-5 rounded-2xl border border-white/10 hover:bg-slate-800 hover:border-orange-500/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 text-slate-300 bg-slate-900/50 shadow-md flex items-center justify-between text-lg font-light";
+                btn.onclick = () => handleAnswer(index);
+                
+                const textSpan = document.createElement('span');
+                textSpan.textContent = opt;
+                
+                const iconSpan = document.createElement('span');
+                iconSpan.id = `icon-opt-${index}`;
+                iconSpan.className = "ml-3 flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full border border-white/10";
+                
+                btn.appendChild(textSpan);
+                btn.appendChild(iconSpan);
+                optionsContainer.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function handleAnswer(selectedIndex) {
+            if (answered) return;
+            answered = true;
+            
+            const q = activeQuizQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === q.correctAnswer;
+            
+            if (isCorrect) score++;
+            currentScoreEl.textContent = score;
+
+            // Style options
+            const options = optionsContainer.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+                options[i].classList.remove('hover:bg-slate-800', 'hover:border-cyan-500/50', 'cursor-pointer');
+                
+                const iconSpan = document.getElementById(`icon-opt-${i}`);
+
+                if (i === q.correctAnswer) {
+                    options[i].classList.add('bg-emerald-900/30', 'border-emerald-500/50', 'text-emerald-100');
+                    options[i].classList.remove('bg-slate-900/50', 'text-slate-300');
+                    iconSpan.className = "ml-3 flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-emerald-500 text-white";
+                    iconSpan.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i>';
+                } else if (i === selectedIndex && !isCorrect) {
+                    options[i].classList.add('bg-rose-900/30', 'border-rose-500/50', 'text-rose-100');
+                    options[i].classList.remove('bg-slate-900/50', 'text-slate-300');
+                    iconSpan.className = "ml-3 flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-rose-500 text-white";
+                    iconSpan.innerHTML = '<i data-lucide="x" class="w-4 h-4"></i>';
+                } else {
+                    options[i].classList.add('opacity-40');
+                }
+            }
+
+            // Show feedback
+            feedbackContainer.classList.remove('hidden');
+            // Allow display block to apply before changing opacity/scale for transition
+            setTimeout(() => {
+                feedbackContainer.classList.remove('scale-95', 'opacity-0');
+                feedbackContainer.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            
+            feedbackContainer.classList.remove('bg-emerald-900/20', 'border-emerald-500/30', 'bg-rose-900/20', 'border-rose-500/30');
+            
+            if (isCorrect) {
+                feedbackContainer.classList.add('bg-emerald-900/20', 'border-emerald-500/30');
+                feedbackIcon.innerHTML = '<i data-lucide="check-circle" class="w-7 h-7 text-emerald-400"></i>';
+                feedbackTitle.className = "text-base font-bold tracking-wide text-emerald-300";
+                feedbackTitle.textContent = "Spot On!";
+                feedbackText.className = "mt-2 text-sm leading-relaxed text-emerald-100/80";
+            } else {
+                feedbackContainer.classList.add('bg-rose-900/20', 'border-rose-500/30');
+                feedbackIcon.innerHTML = '<i data-lucide="x-circle" class="w-7 h-7 text-rose-400"></i>';
+                feedbackTitle.className = "text-base font-bold tracking-wide text-rose-300";
+                feedbackTitle.textContent = "Not Quite";
+                feedbackText.className = "mt-2 text-sm leading-relaxed text-rose-100/80";
+            }
+            
+            feedbackText.textContent = q.explanation;
+            
+            // Enable next button and update its text if it's the last question
+            nextBtn.disabled = false;
+            if (currentQuestionIndex === activeQuizQuestions.length - 1) {
+                nextBtn.innerHTML = 'See Results <i data-lucide="award" class="w-5 h-5 ml-2"></i>';
+            }
+            
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < activeQuizQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizActiveDiv.classList.add('hidden');
+            quizResultsDiv.classList.remove('hidden');
+            
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-total').textContent = activeQuizQuestions.length;
+            
+            const resultIconContainer = document.getElementById('result-icon-container');
+            const resultMessage = document.getElementById('result-message');
+            
+            const percentage = score / activeQuizQuestions.length;
+            
+            if (percentage === 1) {
+                resultIconContainer.innerHTML = '<i data-lucide="shield-check" class="w-12 h-12 text-emerald-400"></i>';
+                resultMessage.className = "bg-emerald-900/20 backdrop-blur-md rounded-2xl p-8 mb-10 text-left border border-emerald-500/30 shadow-xl relative z-10";
+                resultMessage.innerHTML = `
+                    <h3 class="font-extrabold text-emerald-300 text-xl mb-2">Perfect Score! Expert Level</h3>
+                    <p class="text-emerald-100/80 text-base leading-relaxed">You have an excellent grasp of digital literacy. Keep using these skills to navigate the web safely and help others do the same.</p>
+                `;
+            } else if (percentage >= 0.5) {
+                resultIconContainer.innerHTML = '<i data-lucide="thumbs-up" class="w-12 h-12 text-orange-400"></i>';
+                resultMessage.className = "bg-orange-900/20 backdrop-blur-md rounded-2xl p-8 mb-10 text-left border border-orange-500/30 shadow-xl relative z-10";
+                resultMessage.innerHTML = `
+                    <h3 class="font-extrabold text-orange-300 text-xl mb-2">Good Job! Solid Foundation</h3>
+                    <p class="text-orange-100/80 text-base leading-relaxed">You know your way around, but there's always more to learn. Review the tips to sharpen your skills further against increasingly sophisticated misinformation.</p>
+                `;
+            } else {
+                resultIconContainer.innerHTML = '<i data-lucide="alert-triangle" class="w-12 h-12 text-rose-400"></i>';
+                resultMessage.className = "bg-rose-900/20 backdrop-blur-md rounded-2xl p-8 mb-10 text-left border border-rose-500/30 shadow-xl relative z-10";
+                resultMessage.innerHTML = `
+                    <h3 class="font-extrabold text-rose-300 text-xl mb-2">Keep Learning! Needs Practice</h3>
+                    <p class="text-rose-100/80 text-base leading-relaxed">The internet can be tricky! Don't worry, these skills take practice. We highly recommend reading through the "Learn Tips" section to improve your digital defense.</p>
+                `;
+            }
+            
+            lucide.createIcons();
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            quizResultsDiv.classList.add('hidden');
+            quizActiveDiv.classList.remove('hidden');
+            
+            // Reset next button text
+            nextBtn.innerHTML = 'Next Question <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>';
+            
+            generateQuiz(); // Generate a brand new set of 6 questions
+            loadQuestion();
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
